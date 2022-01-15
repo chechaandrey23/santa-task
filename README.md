@@ -1,19 +1,32 @@
+## Dependencies
+
+node,
+npm,
+yarn,
+node-pre-gyp(@mapbox/node-pre-gyp),
+nest,
+jest
+
 ## Install
 
 ```bash
 $ npm install
 ```
 
+## Option Install
+
+```bash
+$ yarn add sqlite3
+```
+
 ## Run
 
 ```bash
-# development
-$ npm run start
+$ npm run start:dev
 ```
 
 ## Test
 
 ```bash
-# e2e tests
 $ npm run test:e2e
 ```
