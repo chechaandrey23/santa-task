@@ -7,7 +7,7 @@ export class MyRecipientDTO {
 	@IsNotEmpty()
 	@Transform(({value}) => {return value*1})
 	@IsInt()
-	@IsPositive()
+	//@IsPositive()
 	@Min(1)
 	@Max(Math.pow(2, 32) - 1)
 	id: number;
