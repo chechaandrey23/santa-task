@@ -9,6 +9,7 @@ import {handlerError} from '../../helpers/handler.error';
 import {Result} from './result.model';
 import {Participant} from '../participants/participant.model';
 import {Desire} from '../desires/desire.model';
+import {Game} from '../games/game.model';
 
 import {GamesService} from '../games/games.service';
 
@@ -85,28 +86,34 @@ export class ResultsService {
 	public async getMyRecipient(myRecipient: MyRecipient) {
 		try {
 			return await this.sequelize.transaction({...(myRecipient.transaction?{transaction: myRecipient.transaction}:{})}, async (t) => {
-				const gameId = myRecipient.gameId || ((await this.gamesService.getCurrentGame({transaction: t})).getDataValue('id') * 1 - 1);
+				//const gameId = myRecipient.gameId || ((await this.gamesService.getCurrentGame({transaction: t})).getDataValue('id') * 1 - 1);
 
-				let resultModelName = this.results.name.toString();
-				const res = await this.results.findOne({
+				const query: any = {
 					include: [
 						{model: Participant, as: 'ParticipantSanta'},
-						{model: Participant, as: 'ParticipantRecipient', include: [Desire]}
+						{model: Participant, as: 'ParticipantRecipient', include: [Desire]},
 					],
 					where: {
 						santaId: myRecipient.id,
-						gameId: gameId
 					},
 					transaction: t,
 					//subQuery:false
-				});
+				};
+
+				if(myRecipient.gameId) {
+					query.where.gameId = myRecipient.gameId;
+				} else {
+					query.include.push({model: Game, required: true, order: [['createdAt', 'DESC']], limit: 1});
+				}
+
+				const res = await this.results.findOne(query);
 
 				if(res) {
 					return res;
 				} else {
 					throw new ConflictException({
-						gameId: gameId,
-						reason: `Unable to find recipient "${myRecipient.id}" in game "${gameId}"`
+						gameId: myRecipient.gameId,
+						reason: `Unable to find recipient "${myRecipient.id}" in game "${myRecipient.gameId}"`
 					} as NotFoundMyRecipient);
 				}
 			});

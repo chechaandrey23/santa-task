@@ -10,23 +10,33 @@ jest
 ## Install
 
 ```bash
-$ npm install
+npm install
 ```
 
 ## Option Install
 
 ```bash
-$ yarn add sqlite3
+yarn add sqlite3
 ```
 
 ## Run
 
 ```bash
-$ npm run start:dev
+npm run start:dev
+```
+
+## Server address
+
+```bash
+http://localhost:4004
+```
+
+```bash
+http://localhost:4004/api
 ```
 
 ## Test
 
 ```bash
-$ npm run test:e2e
+npm run test:e2e
 ```
